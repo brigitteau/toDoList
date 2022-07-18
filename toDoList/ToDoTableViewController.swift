@@ -19,7 +19,7 @@ class ToDoTableViewController: UITableViewController {
     
     func createToDos() -> [ToDo] {
         let crime = ToDo()
-        crime.name = "steal a linkedIn cookie"
+        crime.name = "steal a LinkedIn cookie"
         
         let dog = ToDo()
         dog.name = "sneak a dog onto campus"
@@ -46,7 +46,7 @@ class ToDoTableViewController: UITableViewController {
         let toDo = toDos[indexPath.row]
         
         if toDo.important{
-            cell.textLabel?.text = "🍄" + toDo.name
+            cell.textLabel?.text = "🔮" + toDo.name
         }
         else{
             cell.textLabel?.text = toDo.name
@@ -56,7 +56,23 @@ class ToDoTableViewController: UITableViewController {
         return cell
     }
     
-
+    override func prepare( for segue: UIStoryboardSegue, sender: Any?) {
+        if let addVC = segue.destination as? AddToDoViewController {
+            addVC.previousVC = self
+        }
+        if let completedVC = segue.destination as? CompleteToDoViewController {
+            if let toDo = sender as? ToDo{
+                completedVC.selectedToDo = toDo
+                completedVC.previousVC = self
+            }
+        }
+    }
+   
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let toDo = toDos[indexPath.row]
+        performSegue(withIdentifier: "moveToComplete", sender: toDo)
+    }
     /*
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
